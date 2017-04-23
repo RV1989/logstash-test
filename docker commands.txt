@@ -1,0 +1,11 @@
+// elastic search
+docker run -d -p 9200:9200 -p 9300:9300 -it -h elasticsearch --name elasticsearch elasticsearch
+
+// kibana
+docker run -d -p 5601:5601 -it -h kibana --name kibana --link elasticsearch:elasticsearch kibana
+
+// logstash as tcp server
+docker run  -h logstash  -p 3000:3000 --link elasticsearch:elasticsearch --name logstash --rm -v "$PWD":/config-dir logstash -f /config-dir/logstash.conf
+
+// logstash as tcp client make sure host in config is not local host must be ip of machine
+docker run  -h logstash   --link elasticsearch:elasticsearch --name logstash --rm -v "$PWD":/config-dir logstash -f /config-dir/logstash.conf
